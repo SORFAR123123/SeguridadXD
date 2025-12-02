@@ -3,222 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estudio - Políticas de Respaldo y Recuperación A deyvis le gusta Leticia XD</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Evaluación de Seguridad de Redes</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💾</text></svg>">
 </head>
 <body>
-    <!-- Pantalla de Inicio -->
-    <div id="pantalla-inicio" class="pantalla activa">
-        <div class="contenedor">
-            <h1>💾 ESTUDIO DE POLÍTICAS DE RESPALDO</h1>
-            <p class="subtitulo">Domina los conceptos de backup, recuperación y continuidad del negocio</p>
+    <div class="container">
+        <!-- Sidebar para navegación -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-network-wired"></i> Seguridad de Redes</h2>
+                <button class="close-sidebar" id="closeSidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
             
-            <div class="menu-principal">
-                <div class="seccion-menu">
-                    <h2 class="titulo-seccion"><i class="fas fa-graduation-cap"></i> MAZOS DE ESTUDIO</h2>
-                    <div class="contenedor-tarjetas" id="contenedor-mazos">
-                        <!-- Los mazos se cargarán dinámicamente -->
+            <div class="sidebar-content">
+                <h3><i class="fas fa-calendar-week"></i> Semanas</h3>
+                <div class="week-list">
+                    <!-- Las semanas se generarán dinámicamente con JavaScript -->
+                </div>
+                
+                <div class="progress-container">
+                    <h4><i class="fas fa-chart-line"></i> Progreso Total</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="globalProgress"></div>
                     </div>
+                    <span id="progressText">0%</span>
                 </div>
                 
-                <div class="misiones-diarias-panel">
-                    <h3><i class="fas fa-chart-line"></i> TU PROGRESO ACADÉMICO</h3>
-                    <div class="misiones-lista">
-                        <div class="mision-item">
-                            <span class="mision-texto">Preguntas contestadas</span>
-                            <span class="mision-progreso">
-                                <span id="preguntas-totales">0</span>/65
-                            </span>
-                        </div>
-                        <div class="mision-item">
-                            <span class="mision-texto">Precisión general</span>
-                            <span class="mision-recompensa" id="precision-total">0%</span>
-                        </div>
-                        <div class="mision-item">
-                            <span class="mision-texto">Mazos completados</span>
-                            <span class="mision-progreso">
-                                <span id="mazos-completados">0</span>/5
-                            </span>
-                        </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <i class="fas fa-question-circle"></i>
+                        <span id="totalQuestions">0</span> preguntas
                     </div>
-                </div>
-                
-                <div class="economia-panel">
-                    <p class="saldo-total">
-                        <i class="fas fa-star"></i> 
-                        Puntos de conocimiento: <span id="puntos-totales">0</span>
-                    </p>
-                </div>
-                
-                <div class="info-panel">
-                    <h3><i class="fas fa-info-circle"></i> CÓMO USAR</h3>
-                    <p class="info-texto">1. Selecciona un mazo de estudio<br>
-                    2. Lee cada pregunta cuidadosamente<br>
-                    3. Selecciona la respuesta correcta<br>
-                    4. Revisa la explicación detallada<br>
-                    5. ¡Aprende y mejora tu puntaje!</p>
+                    <div class="stat-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span id="correctAnswers">0</span> correctas
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-clock"></i>
+                        <span id="currentWeek">Semana 13</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Pantalla del Quiz -->
-    <div id="pantalla-quiz" class="pantalla">
-        <div class="contenedor">
-            <div class="barra-superior">
-                <div class="contador">
-                    <span id="contador-pregunta">Pregunta 1/10</span>
-                    <span class="contador-puntos" id="contador-puntos">Puntos: 0</span>
+        <!-- Contenido principal -->
+        <div class="main-content">
+            <!-- Header -->
+            <header>
+                <button class="menu-btn" id="menuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1>Evaluación de Seguridad de Redes</h1>
+                <div class="header-info">
+                    <span id="currentDeck">Parte 1: Selección Múltiple</span>
+                    <span id="questionCounter">Pregunta 1 de 20</span>
                 </div>
-                <div class="controles-quiz">
-                    <button class="boton-sonido" id="boton-sonido" onclick="toggleSonido()">
-                        <i class="fas fa-volume-up"></i>
-                    </button>
-                    <button class="boton-home" onclick="volverInicio()">
-                        <i class="fas fa-home"></i> Menú
-                    </button>
-                </div>
-            </div>
-            
-            <div class="contenido-quiz">
-                <div class="pregunta-container">
-                    <div class="pregunta-header">
-                        <span class="categoria-pregunta" id="categoria-pregunta">Conceptos Básicos</span>
-                        <span class="dificultad-pregunta" id="dificultad-pregunta">● Fácil</span>
+            </header>
+
+            <!-- Contenedor de la pregunta -->
+            <div class="question-container">
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number" id="questionNumber">Pregunta 1</span>
+                        <span class="difficulty" id="difficulty">Básica</span>
                     </div>
                     
-                    <div class="palabra-japones" id="pregunta-texto">
+                    <div class="question-text" id="questionText">
                         ¿Qué establece el RPO?
                     </div>
                     
-                    <div class="lectura" id="pregunta-contexto">
-                        Selecciona la respuesta correcta entre las opciones:
+                    <div class="options-container" id="optionsContainer">
+                        <!-- Las opciones se generarán dinámicamente con JavaScript -->
                     </div>
-                </div>
-                
-                <div class="contenedor-opciones" id="contenedor-opciones">
-                    <!-- Las opciones se cargarán dinámicamente -->
-                </div>
-                
-                <div class="resultado" id="resultado-texto">
-                    <!-- Se mostrará si la respuesta es correcta o incorrecta -->
-                </div>
-                
-                <div id="explicacion-container" class="resultado-final" style="display: none;">
-                    <h3><i class="fas fa-lightbulb"></i> EXPLICACIÓN</h3>
-                    <p id="explicacion-texto"></p>
-                    <div class="referencia" id="referencia-texto"></div>
-                </div>
-                
-                <div class="acciones-botones">
-                    <button id="boton-siguiente" class="boton-principal" onclick="siguientePregunta()" style="display: none;">
-                        <i class="fas fa-arrow-right"></i> Siguiente Pregunta
-                    </button>
                     
-                    <button id="boton-finalizar" class="boton-secundario" onclick="finalizarQuiz()" style="display: none;">
-                        <i class="fas fa-flag-checkered"></i> Ver Resultados
-                    </button>
+                    <div class="feedback" id="feedback">
+                        <!-- Feedback se mostrará aquí -->
+                    </div>
+                    
+                    <div class="question-footer">
+                        <button class="btn-hint" id="hintBtn">
+                            <i class="fas fa-lightbulb"></i> Pista
+                        </button>
+                        <button class="btn-next" id="nextBtn" disabled>
+                            Siguiente <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
                 </div>
                 
-                <div class="progreso-quiz">
-                    <div class="barra-progreso-quiz">
-                        <div class="barra-progreso-fill" id="barra-progreso"></div>
+                <!-- Indicador de progreso de la pregunta actual -->
+                <div class="deck-progress">
+                    <h4>Progreso de este mazo</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="deckProgress"></div>
                     </div>
-                    <div class="progreso-texto" id="progreso-texto">0% completado</div>
+                    <span id="deckProgressText">0/0</span>
+                </div>
+                
+                <!-- Navegación rápida entre mazos -->
+                <div class="deck-navigation">
+                    <h4>Mazos de esta semana</h4>
+                    <div class="deck-buttons" id="deckButtons">
+                        <!-- Los botones de mazos se generarán dinámicamente -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Modal para pistas -->
+            <div class="modal" id="hintModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3><i class="fas fa-lightbulb"></i> Pista</h3>
+                        <button class="close-modal" id="closeHintModal">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="hintContent">
+                        <!-- El contenido de la pista aparecerá aquí -->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Pantalla de Resultados -->
-    <div id="pantalla-resultados" class="pantalla">
-        <div class="contenedor">
-            <h1>📊 RESULTADOS DEL ESTUDIO</h1>
-            <p class="subtitulo" id="subtitulo-resultados">Has completado el mazo "Conceptos Básicos"</p>
-            
-            <div class="resultado-final" id="resultados-detalles">
-                <!-- Los resultados se mostrarán aquí -->
-            </div>
-            
-            <div class="estadisticas-container">
-                <div class="estadistica-item">
-                    <div class="estadistica-icono">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div class="estadistica-info">
-                        <span class="estadistica-label">Correctas</span>
-                        <span class="estadistica-valor" id="estadistica-correctas">0</span>
-                    </div>
-                </div>
-                
-                <div class="estadistica-item">
-                    <div class="estadistica-icono">
-                        <i class="fas fa-times-circle"></i>
-                    </div>
-                    <div class="estadistica-info">
-                        <span class="estadistica-label">Incorrectas</span>
-                        <span class="estadistica-valor" id="estadistica-incorrectas">0</span>
-                    </div>
-                </div>
-                
-                <div class="estadistica-item">
-                    <div class="estadistica-icono">
-                        <i class="fas fa-percentage"></i>
-                    </div>
-                    <div class="estadistica-info">
-                        <span class="estadistica-label">Precisión</span>
-                        <span class="estadistica-valor" id="estadistica-precision">0%</span>
-                    </div>
-                </div>
-                
-                <div class="estadistica-item">
-                    <div class="estadistica-icono">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <div class="estadistica-info">
-                        <span class="estadistica-label">Puntos</span>
-                        <span class="estadistica-valor" id="estadistica-puntos">0</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="recomendaciones-panel" id="recomendaciones-panel">
-                <h3><i class="fas fa-graduation-cap"></i> RECOMENDACIONES DE ESTUDIO</h3>
-                <p id="recomendaciones-texto">Basado en tu desempeño, te recomendamos...</p>
-            </div>
-            
-            <div class="acciones-botones">
-                <button class="boton-principal" onclick="volverInicio()">
-                    <i class="fas fa-home"></i> Volver al Menú
-                </button>
-                
-                <button class="boton-secundario" onclick="repetirMazo()">
-                    <i class="fas fa-redo"></i> Repetir Mazo
-                </button>
-                
-                <button class="boton-terciario" onclick="siguienteMazo()">
-                    <i class="fas fa-forward"></i> Siguiente Mazo
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Efectos de confetti -->
-    <div id="confetti-container"></div>
-    
-    <!-- Sonidos -->
-    <audio id="sonido-correcto" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="sonido-incorrecto" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="sonido-completado" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" type="audio/mpeg">
-    </audio>
-
+    <script src="data.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
