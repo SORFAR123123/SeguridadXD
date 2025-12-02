@@ -1,118 +1,131 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplicativo de Estudo de Português</title>
+    <title>Estudio - Políticas de Respaldo</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- PANTALLA DE INICIO -->
+    <!-- Pantalla de Inicio -->
     <div id="pantalla-inicio" class="pantalla activa">
         <div class="contenedor">
-            <h1>BIBLIOTECA DE MAZOS</h1>
-            <p class="subtitulo">Selecione um contêiner principal</p>
+            <h1>ESTUDIO DE POLÍTICAS DE RESPALDO</h1>
+            <p class="subtitulo">Prepara tus exámenes con preguntas de opción múltiple</p>
             
             <div class="menu-principal">
                 <div class="seccion-menu">
-                    <h2 class="titulo-seccion">CONTÊINERES PRINCIPAIS</h2>
-                    <div class="contenedor-tarjetas">
-                        <div class="lastsummer-card" onclick="cargarContenedor('contenedor1')">
-                            <img src="https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=300&h=300&fit=crop" alt="Contêiner 1" class="lastsummer-imagen">
-                            <div class="lastsummer-texto">Saudações Básicas</div>
+                    <h2 class="titulo-seccion">MAZOS DE PREGUNTAS</h2>
+                    <div class="contenedor-tarjetas" id="contenedor-mazos">
+                        <!-- Los mazos se cargarán dinámicamente -->
+                    </div>
+                </div>
+                
+                <div class="misiones-diarias-panel">
+                    <h3><i class="fas fa-trophy"></i> TU PROGRESO</h3>
+                    <div class="misiones-lista">
+                        <div class="mision-item">
+                            <span class="mision-texto">Preguntas contestadas hoy</span>
+                            <span class="mision-progreso">
+                                <span id="preguntas-hoy">0</span>/10
+                            </span>
                         </div>
-                        <div class="lastsummer-card" onclick="cargarContenedor('contenedor2')">
-                            <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?w=300&h=300&fit=crop" alt="Contêiner 2" class="lastsummer-imagen">
-                            <div class="lastsummer-texto">Comida e Restaurante</div>
+                        <div class="mision-item">
+                            <span class="mision-texto">Precisión total</span>
+                            <span class="mision-recompensa" id="precision-total">0%</span>
                         </div>
-                        <div class="lastsummer-card" onclick="cargarContenedor('contenedor3')">
-                            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=300&fit=crop" alt="Contêiner 3" class="lastsummer-imagen">
-                            <div class="lastsummer-texto">Viagens e Transporte</div>
-                        </div>
-                        <div class="lastsummer-card" onclick="cargarContenedor('contenedor4')">
-                            <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=300&h=300&fit=crop" alt="Contêiner 4" class="lastsummer-imagen">
-                            <div class="lastsummer-texto">Trabalho e Negócios</div>
-                        </div>
-                        <div class="lastsummer-card" onclick="cargarContenedor('contenedor5')">
-                            <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=300&h=300&fit=crop" alt="Contêiner 5" class="lastsummer-imagen">
-                            <div class="lastsummer-texto">Casa e Família</div>
+                        <div class="mision-item">
+                            <span class="mision-texto">Mazos completados</span>
+                            <span class="mision-progreso">
+                                <span id="mazos-completados">0</span>/5
+                            </span>
                         </div>
                     </div>
                 </div>
+                
+                <div class="economia-panel">
+                    <p class="saldo-total">
+                        <i class="fas fa-star"></i> 
+                        <span id="puntos-totales">0</span> puntos de conocimiento
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- PANTALLA DE SUBCONTENEDORES -->
-    <div id="pantalla-subcontenedores" class="pantalla">
-        <div class="contenedor">
-            <div class="barra-superior">
-                <div class="contador" id="titulo-contenedor">Contêiner</div>
-                <button class="boton-home" onclick="volverAlInicio()">Voltar ao Início</button>
-            </div>
-            
-            <h2 id="nombre-contenedor">Sub-Contêineres</h2>
-            
-            <div class="contenedor-subcontenedores" id="contenedor-subcontenedores">
-                <!-- Los sub-contenedores se cargarán dinámicamente -->
-            </div>
-        </div>
-    </div>
-
-    <!-- PANTALLA DE MAZOS -->
-    <div id="pantalla-mazos" class="pantalla">
-        <div class="contenedor">
-            <div class="barra-superior">
-                <div class="contador" id="titulo-subcontenedor">Sub-Contêiner</div>
-                <button class="boton-home" onclick="volverASubcontenedores()">Voltar Atrás</button>
-            </div>
-            
-            <h2 id="nombre-subcontenedor">Mazos Disponíveis</h2>
-            
-            <div class="contenedor-mazos" id="contenedor-mazos">
-                <!-- Los mazos se cargarán dinámicamente -->
-            </div>
-        </div>
-    </div>
-
-    <!-- PANTALLA DEL QUIZ -->
+    <!-- Pantalla del Quiz -->
     <div id="pantalla-quiz" class="pantalla">
         <div class="contenedor">
             <div class="barra-superior">
-                <div class="contador" id="contador-preguntas">Pergunta: <span id="numero-pregunta">1</span>/<span id="total-preguntas">10</span></div>
-                <button class="boton-home" onclick="volverAMazos()">Voltar aos Mazos</button>
+                <div class="contador">
+                    <span id="contador-pregunta">Pregunta 1/10</span>
+                </div>
+                <button class="boton-home" onclick="volverInicio()">
+                    <i class="fas fa-home"></i> Volver
+                </button>
             </div>
             
             <div class="contenido-quiz">
-                <div class="palabra-portugues" id="palabra-portugues">Palavra</div>
-                
-                <!-- BOTÓN DE PRONUNCIACIÓN -->
-                <button class="boton-pronunciacion" id="boton-pronunciacion">
-                    🔊 Ouvir Pronúncia
-                </button>
-                
-                <div class="contenedor-opciones" id="contenedor-opciones">
-                    <!-- Las opciones se generarán dinámicamente -->
+                <div class="palabra-japones" id="pregunta-texto">
+                    ¿Qué establece el RPO?
                 </div>
                 
-                <div class="resultado" id="resultado"></div>
+                <div class="lectura" id="pregunta-contexto">
+                    Selecciona la respuesta correcta:
+                </div>
                 
-                <button class="boton-principal" id="boton-siguiente" onclick="siguientePregunta()" style="display: none;">Continuar</button>
+                <div class="contenedor-opciones" id="contenedor-opciones">
+                    <!-- Las opciones se cargarán dinámicamente -->
+                </div>
+                
+                <div class="resultado" id="resultado-texto">
+                    <!-- Se mostrará si la respuesta es correcta o incorrecta -->
+                </div>
+                
+                <div id="explicacion-container" class="resultado-final" style="display: none;">
+                    <p id="explicacion-texto"></p>
+                </div>
+                
+                <div class="acciones-botones">
+                    <button id="boton-siguiente" class="boton-principal" onclick="siguientePregunta()" style="display: none;">
+                        <i class="fas fa-arrow-right"></i> Siguiente Pregunta
+                    </button>
+                    
+                    <button id="boton-finalizar" class="boton-secundario" onclick="finalizarQuiz()" style="display: none;">
+                        <i class="fas fa-flag-checkered"></i> Finalizar Mazo
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- PANTALLA DE RESULTADOS -->
+    <!-- Pantalla de Resultados -->
     <div id="pantalla-resultados" class="pantalla">
         <div class="contenedor">
-            <h1>Resultados do Quiz</h1>
+            <h1>RESULTADOS DEL MAZO</h1>
+            <p class="subtitulo" id="subtitulo-resultados"></p>
             
-            <div class="resultado-final" id="resultado-final">
+            <div class="resultado-final" id="resultados-detalles">
                 <!-- Los resultados se mostrarán aquí -->
             </div>
             
-            <button class="boton-principal" onclick="volverAMazos()">Voltar aos Mazos</button>
-            <button class="boton-secundario" onclick="repetirQuiz()">Repetir Quiz</button>
+            <div class="economia-panel">
+                <p class="saldo-total">
+                    <i class="fas fa-star"></i> 
+                    Ganaste <span id="puntos-ganados">0</span> puntos
+                </p>
+            </div>
+            
+            <div class="acciones-botones">
+                <button class="boton-principal" onclick="volverInicio()">
+                    <i class="fas fa-home"></i> Volver al Inicio
+                </button>
+                
+                <button class="boton-secundario" onclick="repetirMazo()">
+                    <i class="fas fa-redo"></i> Repetir Mazo
+                </button>
+            </div>
         </div>
     </div>
 
