@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicativo de Estudo de Português</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- PANTALLA DE INICIO -->
+    <div id="pantalla-inicio" class="pantalla activa">
+        <div class="contenedor">
+            <h1>BIBLIOTECA DE MAZOS</h1>
+            <p class="subtitulo">Selecione um contêiner principal</p>
+            
+            <div class="menu-principal">
+                <div class="seccion-menu">
+                    <h2 class="titulo-seccion">CONTÊINERES PRINCIPAIS</h2>
+                    <div class="contenedor-tarjetas">
+                        <div class="lastsummer-card" onclick="cargarContenedor('contenedor1')">
+                            <img src="https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=300&h=300&fit=crop" alt="Contêiner 1" class="lastsummer-imagen">
+                            <div class="lastsummer-texto">Saudações Básicas</div>
+                        </div>
+                        <div class="lastsummer-card" onclick="cargarContenedor('contenedor2')">
+                            <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?w=300&h=300&fit=crop" alt="Contêiner 2" class="lastsummer-imagen">
+                            <div class="lastsummer-texto">Comida e Restaurante</div>
+                        </div>
+                        <div class="lastsummer-card" onclick="cargarContenedor('contenedor3')">
+                            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=300&fit=crop" alt="Contêiner 3" class="lastsummer-imagen">
+                            <div class="lastsummer-texto">Viagens e Transporte</div>
+                        </div>
+                        <div class="lastsummer-card" onclick="cargarContenedor('contenedor4')">
+                            <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=300&h=300&fit=crop" alt="Contêiner 4" class="lastsummer-imagen">
+                            <div class="lastsummer-texto">Trabalho e Negócios</div>
+                        </div>
+                        <div class="lastsummer-card" onclick="cargarContenedor('contenedor5')">
+                            <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=300&h=300&fit=crop" alt="Contêiner 5" class="lastsummer-imagen">
+                            <div class="lastsummer-texto">Casa e Família</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANTALLA DE SUBCONTENEDORES -->
+    <div id="pantalla-subcontenedores" class="pantalla">
+        <div class="contenedor">
+            <div class="barra-superior">
+                <div class="contador" id="titulo-contenedor">Contêiner</div>
+                <button class="boton-home" onclick="volverAlInicio()">Voltar ao Início</button>
+            </div>
+            
+            <h2 id="nombre-contenedor">Sub-Contêineres</h2>
+            
+            <div class="contenedor-subcontenedores" id="contenedor-subcontenedores">
+                <!-- Los sub-contenedores se cargarán dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- PANTALLA DE MAZOS -->
+    <div id="pantalla-mazos" class="pantalla">
+        <div class="contenedor">
+            <div class="barra-superior">
+                <div class="contador" id="titulo-subcontenedor">Sub-Contêiner</div>
+                <button class="boton-home" onclick="volverASubcontenedores()">Voltar Atrás</button>
+            </div>
+            
+            <h2 id="nombre-subcontenedor">Mazos Disponíveis</h2>
+            
+            <div class="contenedor-mazos" id="contenedor-mazos">
+                <!-- Los mazos se cargarán dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- PANTALLA DEL QUIZ -->
+    <div id="pantalla-quiz" class="pantalla">
+        <div class="contenedor">
+            <div class="barra-superior">
+                <div class="contador" id="contador-preguntas">Pergunta: <span id="numero-pregunta">1</span>/<span id="total-preguntas">10</span></div>
+                <button class="boton-home" onclick="volverAMazos()">Voltar aos Mazos</button>
+            </div>
+            
+            <div class="contenido-quiz">
+                <div class="palabra-portugues" id="palabra-portugues">Palavra</div>
+                
+                <!-- BOTÓN DE PRONUNCIACIÓN -->
+                <button class="boton-pronunciacion" id="boton-pronunciacion">
+                    🔊 Ouvir Pronúncia
+                </button>
+                
+                <div class="contenedor-opciones" id="contenedor-opciones">
+                    <!-- Las opciones se generarán dinámicamente -->
+                </div>
+                
+                <div class="resultado" id="resultado"></div>
+                
+                <button class="boton-principal" id="boton-siguiente" onclick="siguientePregunta()" style="display: none;">Continuar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANTALLA DE RESULTADOS -->
+    <div id="pantalla-resultados" class="pantalla">
+        <div class="contenedor">
+            <h1>Resultados do Quiz</h1>
+            
+            <div class="resultado-final" id="resultado-final">
+                <!-- Los resultados se mostrarán aquí -->
+            </div>
+            
+            <button class="boton-principal" onclick="volverAMazos()">Voltar aos Mazos</button>
+            <button class="boton-secundario" onclick="repetirQuiz()">Repetir Quiz</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
