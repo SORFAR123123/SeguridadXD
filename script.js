@@ -55,34 +55,47 @@ function init() {
     });
     
     // Teclado shortcuts
-    document.addEventListener('keydown', (e) => {
-        // Números 1-4 para seleccionar opciones
-        if (e.key >= '1' && e.key <= '4') {
-            const optionIndex = parseInt(e.key) - 1;
-            const currentWeek = questionsData.semanas[currentWeekIndex];
-            const currentDeck = currentWeek.mazos[currentDeckIndex];
-            const question = currentDeck.preguntas[currentQuestionIndex];
-            
-            if (optionIndex < question.opciones.length) {
-                selectOption(optionIndex);
-            }
-        }
+    document.addEventListener('keydown', handleKeyboardShortcuts);
+    
+    // Inicializar botones de export/import
+    setupExportImportButtons();
+}
+
+// Manejar atajos de teclado
+function handleKeyboardShortcuts(e) {
+    // Números 1-4 para seleccionar opciones
+    if (e.key >= '1' && e.key <= '4') {
+        const optionIndex = parseInt(e.key) - 1;
+        const currentWeek = questionsData.semanas[currentWeekIndex];
+        const currentDeck = currentWeek.mazos[currentDeckIndex];
+        const question = currentDeck.preguntas[currentQuestionIndex];
         
-        // Espacio o Enter para siguiente pregunta
-        if ((e.key === ' ' || e.key === 'Enter') && !nextBtn.disabled) {
-            nextQuestion();
+        if (optionIndex < question.opciones.length) {
+            selectOption(optionIndex);
         }
-        
-        // H para pista
-        if (e.key === 'h' || e.key === 'H') {
-            showHint();
-        }
-        
-        // Escape para cerrar modales
-        if (e.key === 'Escape') {
-            hintModal.classList.remove('show');
-        }
-    });
+    }
+    
+    // Espacio o Enter para siguiente pregunta
+    if ((e.key === ' ' || e.key === 'Enter') && !nextBtn.disabled) {
+        nextQuestion();
+    }
+    
+    // H para pista
+    if (e.key === 'h' || e.key === 'H') {
+        showHint();
+    }
+    
+    // Escape para cerrar modales
+    if (e.key === 'Escape') {
+        hintModal.classList.remove('show');
+        const completionMessages = document.querySelectorAll('.completion-message');
+        completionMessages.forEach(msg => {
+            msg.classList.remove('show');
+            setTimeout(() => {
+                if (msg.parentNode) msg.parentNode.removeChild(msg);
+            }, 300);
+        });
+    }
 }
 
 // Cargar datos de preguntas desde localStorage o usar datos por defecto
@@ -218,9 +231,18 @@ function renderSidebar() {
             });
             
             if (!isActive) {
+                currentWeekIndex = weekIndex;
+                currentDeckIndex = 0;
+                currentQuestionIndex = 0;
                 weekItem.classList.add('active');
                 deckList.style.display = 'block';
                 icon.style.transform = 'rotate(180deg)';
+                
+                renderDeckButtons();
+                loadCurrentQuestion();
+                updateStats();
+                updateProgressBars();
+                saveProgress();
             } else {
                 icon.style.transform = 'rotate(0deg)';
             }
@@ -266,10 +288,15 @@ function renderDeckButtons() {
 function loadCurrentQuestion() {
     const currentWeekData = questionsData.semanas[currentWeekIndex];
     const currentDeckData = currentWeekData.mazos[currentDeckIndex];
+    
+    if (!currentDeckData || currentDeckData.preguntas.length === 0) {
+        showNoQuestionsMessage();
+        return;
+    }
+    
     const question = currentDeckData.preguntas[currentQuestionIndex];
     
     if (!question) {
-        // Si no hay preguntas, ir a la primera
         currentQuestionIndex = 0;
         return loadCurrentQuestion();
     }
@@ -305,6 +332,15 @@ function loadCurrentQuestion() {
     
     // Actualizar progreso
     updateProgressBars();
+}
+
+// Mensaje cuando no hay preguntas
+function showNoQuestionsMessage() {
+    questionText.textContent = 'No hay preguntas disponibles en este mazo.';
+    optionsContainer.innerHTML = '';
+    feedback.style.display = 'none';
+    nextBtn.disabled = true;
+    hintBtn.disabled = true;
 }
 
 // Renderizar opciones de respuesta
@@ -357,9 +393,11 @@ function selectOption(optionIndex) {
     
     // Actualizar progreso del deck
     const deckId = `${currentWeekData.id}-${currentDeckData.id}`;
-    deckProgress[deckId].answered++;
-    if (isCorrect) {
-        deckProgress[deckId].correct++;
+    if (deckProgress[deckId]) {
+        deckProgress[deckId].answered++;
+        if (isCorrect) {
+            deckProgress[deckId].correct++;
+        }
     }
     
     // Mostrar resultado
@@ -476,6 +514,7 @@ function nextQuestion() {
     
     // Cargar la nueva pregunta
     loadCurrentQuestion();
+    saveProgress();
 }
 
 // Mostrar mensaje de completado
@@ -629,7 +668,7 @@ function updateStats() {
     // Actualizar progreso global
     const percentage = total > 0 ? Math.round((answered / total) * 100) : 0;
     globalProgress.style.width = `${percentage}%`;
-    progressText.textContent = `${percentage}%`;
+    progressText.textContent = `${answered}/${total} (${percentage}%)`;
 }
 
 // Actualizar barras de progreso
@@ -713,117 +752,40 @@ function importProgress(event) {
     reader.readAsText(file);
 }
 
-// Inicializar cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', init);
+// Configurar botones de export/import
+function setupExportImportButtons() {
+    const exportBtn = document.getElementById('exportBtn');
+    const importFile = document.getElementById('importFile');
+    const resetBtn = document.getElementById('resetBtn');
+    
+    if (exportBtn) {
+        exportBtn.addEventListener('click', exportProgress);
+    }
+    
+    if (importFile) {
+        importFile.addEventListener('change', importProgress);
+    }
+    
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            if (confirm('¿Estás seguro de que quieres reiniciar todo tu progreso? Esta acción no se puede deshacer.')) {
+                localStorage.removeItem('quizProgress');
+                location.reload();
+            }
+        });
+    }
+}
 
-// CSS adicional para mensajes de completado
+// Añadir CSS adicional para mensajes
 const additionalCSS = `
-.completion-message {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 3000;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-}
-
-.completion-message.show {
-    opacity: 1;
-    pointer-events: all;
-}
-
-.completion-content {
-    background: white;
-    border-radius: 15px;
-    padding: 40px;
-    max-width: 500px;
-    width: 90%;
-    text-align: center;
-    transform: translateY(20px);
-    transition: transform 0.3s ease;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-.completion-message.show .completion-content {
-    transform: translateY(0);
-}
-
-.completion-content i {
-    font-size: 4rem;
-    color: #f39c12;
-    margin-bottom: 20px;
-}
-
-.completion-content h2, .completion-content h3 {
-    color: #2c3e50;
-    margin-bottom: 15px;
-}
-
-.completion-content p {
-    color: #7f8c8d;
-    margin-bottom: 25px;
-    line-height: 1.6;
-}
-
-.final-stats {
-    background: #f8f9fa;
-    border-radius: 10px;
-    padding: 20px;
-    margin: 25px 0;
-    text-align: left;
-}
-
-.final-stat {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 5px;
-    transition: background 0.3s;
-}
-
-.final-stat:hover {
-    background: #e9ecef;
-}
-
-.final-stat i {
-    font-size: 1.5rem;
-    color: #3498db;
-    width: 30px;
-}
-
-.final-stat span {
-    font-weight: 600;
-    color: #2c3e50;
-}
-
-.final-buttons {
-    display: flex;
-    gap: 15px;
-    margin-top: 25px;
-}
-
-.final-buttons button {
-    flex: 1;
-    padding: 12px;
-    font-size: 1rem;
-}
-
 .option-shortcut {
-    background: rgba(0, 0, 0, 0.1);
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    color: #7f8c8d;
-    margin-left: auto;
+    background: rgba(0, 0, 0, 0.05);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #757575;
+    font-weight: 600;
+    margin-left: 10px;
 }
 
 @media (max-width: 768px) {
@@ -834,117 +796,24 @@ const additionalCSS = `
     .completion-content {
         padding: 25px;
     }
+    
+    .final-stats {
+        grid-template-columns: 1fr;
+    }
 }
 `;
 
-// Añadir CSS adicional
+// Añadir CSS adicional al documento
 const styleElement = document.createElement('style');
 styleElement.textContent = additionalCSS;
 document.head.appendChild(styleElement);
 
-// Función para añadir botones de exportar/importar en el sidebar
-function addExportImportButtons() {
-    const exportImportDiv = document.createElement('div');
-    exportImportDiv.className = 'export-import';
-    exportImportDiv.innerHTML = `
-        <h4><i class="fas fa-download"></i> Gestionar Progreso</h4>
-        <div class="export-import-buttons">
-            <button id="exportBtn" class="export-btn">
-                <i class="fas fa-file-export"></i> Exportar
-            </button>
-            <label for="importFile" class="import-btn">
-                <i class="fas fa-file-import"></i> Importar
-                <input type="file" id="importFile" accept=".json" style="display: none;">
-            </label>
-            <button id="resetBtn" class="reset-btn">
-                <i class="fas fa-trash-alt"></i> Reiniciar
-            </button>
-        </div>
-    `;
-    
-    document.querySelector('.sidebar-content').appendChild(exportImportDiv);
-    
-    // Event listeners
-    document.getElementById('exportBtn').addEventListener('click', exportProgress);
-    document.getElementById('importFile').addEventListener('change', importProgress);
-    document.getElementById('resetBtn').addEventListener('click', () => {
-        if (confirm('¿Estás seguro de que quieres reiniciar todo tu progreso? Esta acción no se puede deshacer.')) {
-            localStorage.removeItem('quizProgress');
-            location.reload();
-        }
-    });
-}
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', init);
 
-// Añadir CSS para los botones de exportar/importar
-const exportImportCSS = `
-.export-import {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 20px;
-}
-
-.export-import h4 {
-    margin-bottom: 15px;
-    font-size: 1rem;
-    color: #1abc9c;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.export-import-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.export-btn, .import-btn, .reset-btn {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: center;
-    transition: all 0.3s ease;
-    color: white;
-}
-
-.export-btn {
-    background: #3498db;
-}
-
-.export-btn:hover {
-    background: #2980b9;
-}
-
-.import-btn {
-    background: #9b59b6;
-    cursor: pointer;
-}
-
-.import-btn:hover {
-    background: #8e44ad;
-}
-
-.reset-btn {
-    background: #e74c3c;
-}
-
-.reset-btn:hover {
-    background: #c0392b;
-}
-`;
-
-// Añadir CSS de export/import
-const exportImportStyle = document.createElement('style');
-exportImportStyle.textContent = exportImportCSS;
-document.head.appendChild(exportImportStyle);
-
-// Añadir botones de exportar/importar cuando se cargue la página
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(addExportImportButtons, 100);
+// Manejar redimensionamiento de ventana
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+        sidebar.classList.remove('show');
+    }
 });
